@@ -1,0 +1,37 @@
+{
+  "manifest_version": 2,
+  "name": "Sci-Hub Now!",
+  "short_name": "sci-hub-now",
+  "version": "0.0.1",
+  "author": "Orçun Özdemir",
+  "homepage_url": "https://github.com/0x01h/sci-hub-now",
+  "description": "Free access to academic papers with just a single click! Abolish publishers, long live the open access movement!",
+  "icons": {
+    "48": "icons/48x48.png",
+    "96": "icons/96x96.png"
+  },
+  "browser_action": {
+    "browser_style": true,
+    "default_icon": {
+      "48": "icons/48x48.png",
+      "96": "icons/96x96.png"
+    },
+    "default_title": "Sci-Hub Now!",
+    "theme_icons": [
+      {
+        "light": "icons/48x48_white.png",
+        "dark": "icons/48x48.png",
+        "size": 48
+      },
+      {
+        "light": "icons/96x96_white.png",
+        "dark": "icons/96x96.png",
+        "size": 96
+      }
+    ]
+  },
+  "permissions": ["<all_urls>", "contextMenus"],
+  "background": {
+    "scripts": ["browser-polyfill.js", "background.js"]
+  }
+}
