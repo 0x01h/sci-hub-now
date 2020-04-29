@@ -6,6 +6,15 @@ Free access to academic papers with just a single click!<br>
 
 **Abolish publishers, long live the open access movement!**<br>
 
+**Example popular publishers:**
+
+- researchgate.net
+- jstor.org
+- springer.com
+- onlinelibrary.wiley.com
+- dl.acm.org
+- ieeexplore.ieee.org
+
 "All things for all men, since all men have need of them, since all men worked to produce them in the measure of their strength, and since it is not possible to evaluate everyone’s part in the production of the world’s wealth… All is for all!"<br>
 
 - Peter Kropotkin
