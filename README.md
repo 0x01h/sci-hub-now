@@ -6,7 +6,7 @@ Free access to academic papers with just a single click!<br>
 
 **Abolish publishers, long live the open access movement!**<br>
 
-**Example popular publishers:**
+Example popular publishers:
 
 - [ResearchGate](https://researchgate.net)
 - [JSTOR](https://jstor.org)
