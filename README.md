@@ -15,9 +15,7 @@ Example popular publishers:
 - [ACM](https://dl.acm.org)
 - [IEEE](https://ieeexplore.ieee.org)
 
-"All things for all men, since all men have need of them, since all men worked to produce them in the measure of their strength, and since it is not possible to evaluate everyone’s part in the production of the world’s wealth… All is for all!"<br>
-
-- Peter Kropotkin
+> "All things for all men, since all men have need of them, since all men worked to produce them in the measure of their strength, and since it is not possible to evaluate everyone’s part in the production of the world’s wealth… All is for all!"<br> - Peter Kropotkin
 
 _In memory of Aaron Swartz..._
 
