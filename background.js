@@ -1,4 +1,8 @@
-const doiRegex = "10.\\d{4,9}/[-._;()/:a-z0-9A-Z]+";
+// Old and less strict DOI regex.
+// const doiRegex = "10.\\d{4,9}/[-._;()/:a-z0-9A-Z]+";
+const doiRegex = new RegExp(
+  /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\'<>])\S)+)\b/
+);
 const sciHubUrl = "https://sci-hub.tw/";
 const trueRed = "#BC243C";
 
