@@ -24,3 +24,22 @@ _In memory of Aaron Swartz..._
 
 ![Mozilla Add-on](https://img.shields.io/amo/v/sci-hub-now)
 ![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jnlldhggdfnbabnjbgahoabglgmjbhdl)
+
+# Manual Installation Instructions
+It seems the original author, @0x01h, is no longer maintaining this project.  Here are instructions to manually update your extension to this version.  It's very easy.
+
+### Download @lsterzinger 's version
+1. On this page, click "Commits" right above my original comment, next to "Conversation" and "Checks"
+2. On the right hand side of the page, click the little `<>` icon which has the mouseover text "browse the repository at this point in history"
+3. Click the green "Code" dropdown towards the upper right of the screen and select "Download Zip"
+4. Unzip the folder once it's done downloading.  I recommend placing this folder somewhere permanent (not in Downloads folder), because if it gets deleted, Chrome will not be able to find it anymore.
+
+### Install into Chrome
+1. go to [chrome://extensions](chrome://extensions)
+2. on the top right of the screen, toggle "Developer Mode" to ON.  You should now see "Load Unpacked" "Pack Extension" "Update" on the top left of the screen.
+3. (optional) Remove the old Sci-Hub Now extension, so that you don't get confused which version is which (because this will install a new version but not replace the old one)
+4. Click "Load Unpacked".  Select the unzipped folder.
+
+---
+
+That should be it and it should be working now with the new version (0.0.3).
