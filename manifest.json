@@ -30,8 +30,9 @@
       }
     ]
   },
-  "permissions": ["<all_urls>", "contextMenus"],
+  "permissions": ["<all_urls>", "contextMenus", "storage"],
   "background": {
     "scripts": ["browser-polyfill.js", "background.js"]
-  }
+  },
+  "options_page": "options.html"
 }
