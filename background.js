@@ -3,12 +3,26 @@
 const doiRegex = new RegExp(
   /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\'<>])\S)+)\b/
 );
-const sciHubUrl = "https://sci-hub.tw/";
+
+var sciHubUrl;
 const trueRed = "#BC243C";
 
 function resetBadgeText() {
   browser.browserAction.setBadgeText({ text: "" });
 }
+
+function setUrl(url) {
+  sciHubUrl = url;
+};
+function iniitalizeUrl () {
+  chrome.storage.local.get(["scihub-url"], function (result) {
+    if (!("scihub-url" in result)) {
+      result["scihub-url"] = "https://sci-hub.st/";
+      chrome.storage.local.set(result, function () {});
+    }
+    sciHubUrl = result["scihub-url"];
+  });
+};
 
 function getHtml(htmlSource) {
   htmlSource = htmlSource[0];
@@ -48,3 +62,4 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
 browser.browserAction.onClicked.addListener(executeJs);
 browser.tabs.onUpdated.addListener(resetBadgeText);
+iniitalizeUrl();
