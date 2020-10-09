@@ -28,11 +28,9 @@ _In memory of Aaron Swartz..._
 # Manual Installation Instructions
 It seems the original author, @0x01h, is no longer maintaining this project.  Here are instructions to manually update your extension to this version.  It's very easy.
 
-### Download @lsterzinger 's version
-1. On this page, click "Commits" right above my original comment, next to "Conversation" and "Checks"
-2. On the right hand side of the page, click the little `<>` icon which has the mouseover text "browse the repository at this point in history"
-3. Click the green "Code" dropdown towards the upper right of the screen and select "Download Zip"
-4. Unzip the folder once it's done downloading.  I recommend placing this folder somewhere permanent (not in Downloads folder), because if it gets deleted, Chrome will not be able to find it anymore.
+### Download this version
+1. Click the green "Code" dropdown towards the upper right of the screen and select "Download Zip"
+2. Unzip the folder once it's done downloading.  I recommend placing this folder somewhere permanent (not in Downloads folder), because if it gets deleted, Chrome will not be able to find it anymore.
 
 ### Install into Chrome
 1. go to [chrome://extensions](chrome://extensions)
