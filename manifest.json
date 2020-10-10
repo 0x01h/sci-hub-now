@@ -30,7 +30,7 @@
       }
     ]
   },
-  "permissions": ["<all_urls>", "contextMenus", "storage"],
+  "permissions": ["activeTab", "contextMenus", "storage"],
   "background": {
     "scripts": ["browser-polyfill.js", "background.js"]
   },
