@@ -34,5 +34,9 @@
   "background": {
     "scripts": ["browser-polyfill.js", "background.js"]
   },
-  "options_page": "options.html"
+  "options_page": "options.html", // chrome
+  "options_ui": { // firefox
+    "page": "options.html",
+    "browser_style": true
+  }
 }
