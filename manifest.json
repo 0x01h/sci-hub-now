@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
-  "name": "Sci-Hub Now!",
-  "short_name": "sci-hub-now",
+  "name": "Sci-Hub X Now!",
+  "short_name": "sci-hub-x-now",
   "version": "0.0.3",
   "author": "Orçun Özdemir and Lucas Sterzinger and Gerry Chen",
   "homepage_url": "https://github.com/gchenfc/sci-hub-now",
-  "description": "Free access to academic papers with just a single click! Abolish publishers, long live the open access movement!",
+  "description": "Free access to academic papers with just a single click via sci-hub!",
   "icons": {
     "48": "icons/48x48.png",
     "96": "icons/96x96.png"
@@ -16,7 +16,7 @@
       "48": "icons/48x48.png",
       "96": "icons/96x96.png"
     },
-    "default_title": "Sci-Hub Now!",
+    "default_title": "Sci-Hub X Now!",
     "theme_icons": [
       {
         "light": "icons/48x48_white.png",
