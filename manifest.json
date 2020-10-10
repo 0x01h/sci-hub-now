@@ -4,7 +4,7 @@
   "short_name": "sci-hub-now",
   "version": "0.0.3",
   "author": "Orçun Özdemir and Lucas Sterzinger and Gerry Chen",
-  "homepage_url": "https://github.com/lsterzinger/sci-hub-now",
+  "homepage_url": "https://github.com/gchenfc/sci-hub-now",
   "description": "Free access to academic papers with just a single click! Abolish publishers, long live the open access movement!",
   "icons": {
     "48": "icons/48x48.png",
