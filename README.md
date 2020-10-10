@@ -27,18 +27,19 @@ Note (Oct 10, 2020), these are still on v0.0.2 - I will update them soon:
 ![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jnlldhggdfnbabnjbgahoabglgmjbhdl)
 
 # Manual Installation Instructions
-It seems the original author, @0x01h, is no longer maintaining this project.  Here are instructions to manually update your extension to this version.  It's very easy.
+If the most up to date version of the extension not available yet through the Chrome or Firefox stores due to being in review, then you can still manually install the [latest version](https://github.com/gchenfc/sci-hub-now/releases/latest).  Here are instructions to manually update your extension.  It's very easy.
 
-### Download this version
-1. Click the green "Code" dropdown towards the upper right of the screen and select "Download Zip"
-2. Unzip the folder once it's done downloading.  I recommend placing this folder somewhere permanent (not in Downloads folder), because if it gets deleted, Chrome will not be able to find it anymore.
+### Chrome
+1. [Download](https://github.com/gchenfc/sci-hub-now/releases/download/v0.0.3/sci-hub-now_v0.0.3_chrome.zip) and unzip
+2. go to [chrome://extensions](chrome://extensions)
+3. on the top right of the screen, toggle "Developer Mode" to ON.  You should now see "Load Unpacked" "Pack Extension" "Update" on the top left of the screen.
+4. (optional) Remove the old Sci-Hub Now extension, so that you don't get confused which version is which (because this will install a new version but not replace the old one)
+5. Click "Load Unpacked".  Select the unzipped folder.
 
-### Install into Chrome
-1. go to [chrome://extensions](chrome://extensions)
-2. on the top right of the screen, toggle "Developer Mode" to ON.  You should now see "Load Unpacked" "Pack Extension" "Update" on the top left of the screen.
-3. (optional) Remove the old Sci-Hub Now extension, so that you don't get confused which version is which (because this will install a new version but not replace the old one)
-4. Click "Load Unpacked".  Select the unzipped folder.
+### Firefox
+1. [Click here](https://github.com/gchenfc/sci-hub-now/releases/download/v0.0.3/sci-hub-now_v0.0.3_firefox.xpi) - Firefox should automatically prompt you to "Add Sci-Hub X Now!".
+2. If Firefox doesn't automatically prompt you, go to [about:addons](about:addons), click the gear icon on the top right, and select "Install Add-on from File..."
 
----
+That's it!
 
-That should be it and it should be working now with the new version (0.0.3).
+Post issues in the [Issues tab](https://github.com/gchenfc/sci-hub-now/issues).
