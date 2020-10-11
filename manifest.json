@@ -34,8 +34,8 @@
   "background": {
     "scripts": ["browser-polyfill.js", "background.js"]
   },
-  "options_page": "options.html", // chrome
-  "options_ui": { // firefox - DELETE THESE LINES WHEN SUBMITTING TO CHROME WEB STORE
+  "options_page": "options.html",   "_comment": "chrome",
+  "options_ui": {                   "_comment": "firefox",
     "page": "options.html",
     "browser_style": true
   }
