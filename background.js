@@ -43,7 +43,7 @@ function getHtml(htmlSource) {
 
 function executeJs() {
   const executing = browser.tabs.executeScript({
-    code: "document.documentElement.innerHTML",
+    code: "document.body.innerHTML",
   });
   executing.then(getHtml);
 }
