@@ -5,11 +5,10 @@
 Free access to academic papers with just a single click!<br>
 
 **Mozilla Add-on**: https://addons.mozilla.org/en-US/firefox/addon/sci-hub-x-now/<br>
-**Chrome Web Store**: https://chrome.google.com/webstore/detail/sci-hub-now/jnlldhggdfnbabnjbgahoabglgmjbhdl
+**Chrome Web Store**: https://chrome.google.com/webstore/detail/sci-hub-x-now/gmmnidkpkgiohfdoenhpghbilmeeagjj
 
 [![Mozilla Add-on](https://img.shields.io/amo/v/sci-hub-x-now)](https://addons.mozilla.org/en-US/firefox/addon/sci-hub-x-now/)
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jnlldhggdfnbabnjbgahoabglgmjbhdl)](https://chrome.google.com/webstore/detail/sci-hub-now/jnlldhggdfnbabnjbgahoabglgmjbhdl)  
-  *Note (Oct 11, 2020), I am awaiting approval from the Chrome web store, but hopefully it should be updated to v0.0.3 soon...
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/gmmnidkpkgiohfdoenhpghbilmeeagjj)](https://chrome.google.com/webstore/detail/sci-hub-x-now/gmmnidkpkgiohfdoenhpghbilmeeagjj)  
 
 ---
 
