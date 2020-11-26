@@ -1,9 +1,9 @@
 // Old and less strict DOI regex.
 // const doiRegex = "10.\\d{4,9}/[-._;()/:a-z0-9A-Z]+";
 const doiRegex = new RegExp(
-  /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\'<>])\S)+)\b/
-);
-const sciHubUrl = "https://sci-hub.tw/";
+  /\b10[.][0-9]{4,}\/[0-9]*[.][0-9]*[\/]?\b/
+  );
+const sciHubUrl = "https://sci-hub.se/https://doi.org/";
 const trueRed = "#BC243C";
 
 function resetBadgeText() {
