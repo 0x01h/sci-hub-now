@@ -1,19 +1,34 @@
 'use strict';
 
-function getUrl(field) {
-  chrome.storage.local.get(['scihub-url'], function (result) {
-    field.value = result['scihub-url'];
+function updatePageString(field, propname) {
+  chrome.storage.local.get([propname], function (result) {
+    field.value = result[propname];
   })
 }
-
-function setUrl(url) {
-  chrome.storage.local.set({'scihub-url': url}, function () {})
+function updatePageBool(field, propname) {
+  chrome.storage.local.get([propname], function (result) {
+    field.checked = result[propname];
+  })
+}
+function updateStorage(val, propname) {
+  var obj = {};
+  obj[propname] = val;
+  chrome.storage.local.set(obj, function () {});
   var bgPage = chrome.extension.getBackgroundPage();
-  bgPage.setUrl(url);
+  bgPage.setthing(propname, val);
+}
+function updateStuffString(field, propname) {
+  updatePageString(field, propname);
+  field.onkeyup = function () {
+    updateStorage(field.value, propname);
+  }
+}
+function updateStuffBool(field, propname) {
+  updatePageBool(field, propname);
+  field.onchange = function () {
+    updateStorage(field.checked, propname);
+  }
 }
 
-var urlField = document.getElementById("url");
-getUrl(urlField);
-urlField.onkeyup = function () {
-  setUrl(urlField.value);
-};
+updateStuffString(document.getElementById("url"), "scihub-url");
+updateStuffBool(document.getElementById("newtab"), "open-in-new-tab");
