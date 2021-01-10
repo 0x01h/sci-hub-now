@@ -6,23 +6,35 @@ const doiRegex = new RegExp(
 
 var sciHubUrl;
 const trueRed = "#BC243C";
+var openInNewTab = false;
+const defaults = {
+  "scihub-url": "https://sci-hub.st/",
+  "open-in-new-tab": false
+};
 
 function resetBadgeText() {
   browser.browserAction.setBadgeText({ text: "" });
 }
 
-function setUrl(url) {
-  sciHubUrl = url;
-};
-function iniitalizeUrl () {
-  chrome.storage.local.get(["scihub-url"], function (result) {
-    if (!("scihub-url" in result)) {
-      result["scihub-url"] = "https://sci-hub.st/";
+function setthing(name, value) {
+  switch(name) {
+    case "scihub-url":
+      sciHubUrl = value;
+      break;
+    case "open-in-new-tab":
+      openInNewTab = value;
+      break;
+  }
+}
+function initialize(name) {
+  chrome.storage.local.get([name], function(result) {
+    if (!(name in result)) {
+      result[name] = defaults[name];
       chrome.storage.local.set(result, function () {});
     }
-    sciHubUrl = result["scihub-url"];
-  });
-};
+    setthing(name, result[name]);
+  })
+}
 
 function getHtml(htmlSource) {
   htmlSource = htmlSource[0];
@@ -30,10 +42,14 @@ function getHtml(htmlSource) {
   if (foundRegex) {
     foundRegex = foundRegex[0].split(";")[0];
     // console.log("Regex: " + foundRegex);
-    var creatingTab = browser.tabs.create({
-      url: sciHubUrl + foundRegex,
-    });
-    creatingTab.then();
+    if (openInNewTab) {
+      var creatingTab = browser.tabs.create({
+        url: sciHubUrl + foundRegex,
+      });
+      creatingTab.then();
+    } else {
+      browser.tabs.update(undefined, {url: sciHubUrl + foundRegex});
+    }
   } else {
     browser.browserAction.setBadgeTextColor({ color: "white" });
     browser.browserAction.setBadgeBackgroundColor({ color: trueRed });
@@ -62,4 +78,6 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
 browser.browserAction.onClicked.addListener(executeJs);
 browser.tabs.onUpdated.addListener(resetBadgeText);
-iniitalizeUrl();
+for (const property in defaults) {
+  initialize(property);
+}
