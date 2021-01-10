@@ -7,9 +7,11 @@ const doiRegex = new RegExp(
 var sciHubUrl;
 const trueRed = "#BC243C";
 var openInNewTab = false;
+var autoCheckServer = true;
 const defaults = {
   "scihub-url": "https://sci-hub.st/",
-  "open-in-new-tab": false
+  "open-in-new-tab": false,
+  "autocheck-server": true
 };
 
 function resetBadgeText() {
@@ -23,6 +25,9 @@ function setthing(name, value) {
       break;
     case "open-in-new-tab":
       openInNewTab = value;
+      break;
+    case "autocheck-server":
+      autoCheckServer = value;
       break;
   }
 }
@@ -61,7 +66,9 @@ function getHtml(htmlSource) {
     } else {
       browser.tabs.update(undefined, {url: sciHubUrl + foundRegex});
     }
-    checkServerStatus();
+    if (autoCheckServer) {
+      checkServerStatus();
+    }
   } else {
     browser.browserAction.setBadgeTextColor({ color: "white" });
     browser.browserAction.setBadgeBackgroundColor({ color: trueRed });

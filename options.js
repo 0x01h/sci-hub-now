@@ -60,6 +60,7 @@ function checkServerStatus(domain, i, ifOnline, ifOffline) {
 }
 
 updateStuffBool(document.getElementById("newtab"), "open-in-new-tab");
+updateStuffBool(document.getElementById("autocheck"), "autocheck-server");
 updateStuffString(document.getElementById("url"), "scihub-url", true);
 
 // fetch urls
