@@ -76,7 +76,6 @@ function fillUrls() {
   xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       links = JSON.parse(this.responseText);
-      links.splice(3, 0, "https://deadlink.com/");
       for (const i in links) {
         linkstable.insertRow();
         linkstable.rows[linkstable.rows.length-1].innerHTML = "<td>"+links[i]+'</td><button id="link'+i+'">Select</button>';
