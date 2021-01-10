@@ -68,6 +68,7 @@ var linkstable = document.getElementById("links");
 function setUrl(i) {
   document.getElementById("url").value = links[i];
   updateStorage(links[i], "scihub-url");
+  document.getElementById("url").style.backgroundColor = linkstable.rows[parseInt(i)+1].bgColor;
 }
 function fillUrls() {
   var xmlhttp = new XMLHttpRequest();
