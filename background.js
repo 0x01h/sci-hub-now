@@ -7,9 +7,11 @@ const doiRegex = new RegExp(
 var sciHubUrl;
 const trueRed = "#BC243C";
 var openInNewTab = false;
+var autoCheckServer = true;
 const defaults = {
   "scihub-url": "https://sci-hub.st/",
-  "open-in-new-tab": false
+  "open-in-new-tab": false,
+  "autocheck-server": true
 };
 
 function resetBadgeText() {
@@ -24,6 +26,9 @@ function setthing(name, value) {
     case "open-in-new-tab":
       openInNewTab = value;
       break;
+    case "autocheck-server":
+      autoCheckServer = value;
+      break;
   }
 }
 function initialize(name) {
@@ -34,6 +39,17 @@ function initialize(name) {
     }
     setthing(name, result[name]);
   })
+}
+function checkServerStatus() {
+  var img = document.body.appendChild(document.createElement("img"));
+  img.height = 0;
+  img.visibility = "hidden";
+  img.onerror = function () {
+    if (confirm("Looks like the mirror "+sciHubUrl+" is dead.  Would you like to go to the options page to select a different mirror?")) {
+      browser.tabs.create({url: 'chrome://extensions/?options=' + chrome.runtime.id}).then();
+    }
+  }
+  img.src = sciHubUrl + "/misc/img/raven_1.png";
 }
 
 function getHtml(htmlSource) {
@@ -49,6 +65,9 @@ function getHtml(htmlSource) {
       creatingTab.then();
     } else {
       browser.tabs.update(undefined, {url: sciHubUrl + foundRegex});
+    }
+    if (autoCheckServer) {
+      checkServerStatus();
     }
   } else {
     browser.browserAction.setBadgeTextColor({ color: "white" });

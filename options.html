@@ -1,17 +1,52 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style>
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      td, th {border:  1px solid;
+        padding: 0px 10px;
+      }
+    </style>
   </head>
   <body>
     <h1>Sci-hub X Now!</h1>
     <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
       <p style="margin-right: 1em;">Sci-Hub url:</p>
       <input type="text" id="url"/>
+      <!-- <button type="button" id="autofetch">Auto-fetch</button> -->
     </div>
     <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
-      <p style="margin-right: 1em;">Open in new tab:</p>
-      <input type="checkbox" id="newtab" value="true"/>
+      <input type="checkbox" id="newtab"/>
     </div>
+    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+      <span style="margin-right: 1em;">
+        Auto-check sci-hub mirror on each paper request:
+      </span>
+      <input type="checkbox" id="autocheck" checked="true"/>
+    </div>
+    <hr />
+    <div>
+      Here is a list of back-up mirrors.
+      Click "select" to paste the mirror into the "Sci-hub URL" field above.
+    </div>
+    <div>
+      <table id="links" style="margin: auto;">
+        <th style="background-color: whitesmoke;" colspan="2">
+          Sci-hub back-up mirrors:
+        </th>
+      </table>
+    </div>
+    <div style="clear:both"></div>
+    <div style="margin:auto">
+      <p style="float:left; width:50px;">Legend: </p>
+      <p style="background-color: lightgreen; float:left; text-align: center; width:50px;">working</p>
+      <p style="background-color: pink; float:left; text-align: center; width:70px;">not working</p>
+      <p style="background-color: #aaa; float:left; text-align: center; width:50px;">loading</p>
+    <div style="clear:both"></div>
+    <hr />
     <div>
       <p>
         Please visit the <a href="https://github.com/gchenfc/sci-hub-now/issues">github</a> to give feedback.
