@@ -35,6 +35,17 @@ function initialize(name) {
     setthing(name, result[name]);
   })
 }
+function checkServerStatus() {
+  var img = document.body.appendChild(document.createElement("img"));
+  img.height = 0;
+  img.visibility = "hidden";
+  img.onerror = function () {
+    if (confirm("Looks like "+sciHubUrl+" is dead.  Would you like to go to the options page to select a different mirror?")) {
+      browser.tabs.create({url: 'chrome://extensions/?options=' + chrome.runtime.id}).then();
+    }
+  }
+  img.src = sciHubUrl + "/misc/img/raven_1.png";
+}
 
 function getHtml(htmlSource) {
   htmlSource = htmlSource[0];
@@ -50,6 +61,7 @@ function getHtml(htmlSource) {
     } else {
       browser.tabs.update(undefined, {url: sciHubUrl + foundRegex});
     }
+    checkServerStatus();
   } else {
     browser.browserAction.setBadgeTextColor({ color: "white" });
     browser.browserAction.setBadgeBackgroundColor({ color: trueRed });
