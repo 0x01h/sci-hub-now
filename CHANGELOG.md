@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## v0.1.0
 
 ### Added
 - List of active sci-hub links and javascript status checker

@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Sci-Hub X Now!",
   "short_name": "sci-hub-x-now",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "author": "Orçun Özdemir and Lucas Sterzinger and Gerry Chen",
   "homepage_url": "https://github.com/gchenfc/sci-hub-now",
   "description": "Free access to academic papers with just a single click via sci-hub!",
@@ -34,8 +34,8 @@
   "background": {
     "scripts": ["browser-polyfill.js", "background.js"]
   },
-  "options_page": "options.html",   "_comment": "chrome",
-  "options_ui": {                   "_comment": "firefox",
+  "options_page": "options.html",
+  "options_ui": {
     "page": "options.html",
     "browser_style": true
   }
