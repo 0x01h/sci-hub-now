@@ -90,8 +90,12 @@ browser.contextMenus.create({
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
+  var doi = info.linkUrl;
+  if (!doi) {
+    doi = info.selectionText;
+  }
   var creatingTab = browser.tabs.create({
-    url: sciHubUrl + info.selectionText,
+    url: sciHubUrl + doi,
   });
 });
 
