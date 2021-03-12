@@ -86,7 +86,7 @@ function executeJs() {
 browser.contextMenus.create({
   id: "doi-selection",
   title: "Find article by DOI!",
-  contexts: ["selection"],
+  contexts: ["selection","link"],
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
