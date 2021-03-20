@@ -90,7 +90,10 @@ browser.contextMenus.create({
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
+  // if right-clicked on link, then parse link address first
   var doi = info.linkUrl;
+  doi = doi ? doi.match(doiRegex)[0].split(";")[0] : doi;
+  // if link not valid, try the highlighted text
   if (!doi) {
     doi = info.selectionText;
   }
