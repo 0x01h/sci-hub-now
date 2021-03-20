@@ -86,12 +86,19 @@ function executeJs() {
 browser.contextMenus.create({
   id: "doi-selection",
   title: "Find article by DOI!",
-  contexts: ["selection"],
+  contexts: ["selection","link"],
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
+  // if right-clicked on link, then parse link address first
+  var doi = info.linkUrl;
+  doi = doi ? doi.match(doiRegex)[0].split(";")[0] : doi;
+  // if link not valid, try the highlighted text
+  if (!doi) {
+    doi = info.selectionText;
+  }
   var creatingTab = browser.tabs.create({
-    url: sciHubUrl + info.selectionText,
+    url: sciHubUrl + doi,
   });
 });
 
