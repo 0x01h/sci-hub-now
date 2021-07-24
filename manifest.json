@@ -32,13 +32,33 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://sci-hub.se/*"],
-      "js": ["pdf-link-scraper.js"]
+      "matches": [
+        "https://sci-hub.se/*"
+      ],
+      "js": [
+        "content-scripts/pdf-link-scraper.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://doi.crossref.org/servlet/query*"
+      ],
+      "js": [
+        "content-scripts/doi-metadata-scraper.js"
+      ]
     }
   ],
-  "permissions": ["activeTab", "contextMenus", "downloads", "storage"],
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "downloads",
+    "storage"
+  ],
   "background": {
-    "scripts": ["browser-polyfill.js", "background.js"]
+    "scripts": [
+      "browser-polyfill.js",
+      "background.js"
+    ]
   },
   "options_page": "options.html",
   "options_ui": {

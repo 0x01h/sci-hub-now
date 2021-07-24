@@ -14,6 +14,9 @@ const defaults = {
   "autocheck-server": true
 };
 
+var mostRecentDoi = "";
+var mostRecentMetadata = {};
+
 function resetBadgeText() {
   browser.browserAction.setBadgeText({ text: "" });
 }
@@ -52,10 +55,16 @@ function checkServerStatus() {
   img.src = sciHubUrl + "/misc/img/raven_1.png";
 }
 
+function getApiQueryUrl(doi, email) {
+  return 'https://doi.crossref.org/servlet/query' + '?pid=' + email + '&id=' + doi;
+}
+function createFilenameFromMetadata(metadata) {
+  return metadata['author'] + metadata['year'] + metadata['journal'] + "_" + metadata['shorttitle'];
+}
 function downloadPaper(link, fname) {
   chrome.downloads.download({
     url: link,
-    // filename: fname
+    filename: fname
   });
 }
 
@@ -64,6 +73,7 @@ function getHtml(htmlSource) {
   foundRegex = htmlSource.match(doiRegex);
   if (foundRegex) {
     foundRegex = foundRegex[0].split(";")[0];
+    mostRecentDoi = foundRegex;
     // console.log("Regex: " + foundRegex);
     if (openInNewTab) {
       var creatingTab = browser.tabs.create({
@@ -71,7 +81,9 @@ function getHtml(htmlSource) {
       });
       creatingTab.then();
     } else {
-      browser.tabs.update(undefined, {url: sciHubUrl + foundRegex});
+      const email = 'gchenfc.developer@gmail.com';
+      browser.tabs.update(undefined, { url: getApiQueryUrl(foundRegex, email) });
+      // browser.tabs.update(undefined, {url: sciHubUrl + foundRegex});
     }
     if (autoCheckServer) {
       checkServerStatus();
@@ -117,18 +129,20 @@ for (const property in defaults) {
 
 // Messages from content scripts
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    console.log("Got a message");
-    console.log(sender.tab ?
-                "from a content script:" + sender.tab.url :
-                "from the extension");
-    downloadPaper(request.pdfUrl, "test.pdf");
-    sendResponse({});
-
-    // go back
-    let queryOptions = { active: true, currentWindow: true };
-    chrome.tabs.query(queryOptions, (tabs) => {
-      chrome.tabs.goBack(tabs[0].id);
-    });
+  function (request, sender, sendResponse) {
+    if (request.pdfUrl) {
+      downloadPaper(request.pdfUrl, createFilenameFromMetadata(mostRecentMetadata));
+      // go back
+      let queryOptions = { active: true, currentWindow: true };
+      chrome.tabs.query(queryOptions, (tabs) => {
+        chrome.tabs.goBack(tabs[0].id);
+      });
+    }
+    else if (request.metadata) {
+      mostRecentMetadata = request.metadata;
+      browser.tabs.update(undefined, { url: sciHubUrl + mostRecentDoi });
+    } else {
+      alert("unknown message");
+    }
   }
 );
