@@ -15,4 +15,4 @@ else
   infile=$1
 fi
 
-convert $infile \( +clone -fill White -colorize 100% -background Black -flatten -morphology Dilate Disk:$2 -alpha Copy -fill Red -colorize 100% \) -compose DstOver -composite $outfile
+convert $infile \( +clone -fill White -colorize 100% -background Black -flatten -morphology Dilate Disk:$2 -alpha Copy -fill White -colorize 100% \) -compose DstOver -composite $outfile
