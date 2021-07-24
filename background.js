@@ -58,14 +58,23 @@ function checkServerStatus() {
 function getApiQueryUrl(doi, email) {
   return 'https://doi.crossref.org/servlet/query' + '?pid=' + email + '&id=' + doi;
 }
-function createFilenameFromMetadata(metadata) {
-  return metadata['author'] + metadata['year'] + metadata['journal'] + "_" + metadata['shorttitle'];
+function createFilenameFromMetadata(md) {
+  if (!md)
+    return undefined;
+  return md.authorlastname + md.yearmod100 + md.shortvenue + "_" + md.shorttitle + '.pdf';
 }
 function downloadPaper(link, fname) {
-  chrome.downloads.download({
-    url: link,
-    filename: fname
-  });
+  console.log("Downloading " + link + " as " + fname);
+  if (fname) {
+    chrome.downloads.download({
+      url: link,
+      filename: fname
+    });
+  } else {
+    chrome.downloads.download({
+      url: link
+    });
+  }
 }
 
 function getHtml(htmlSource) {
