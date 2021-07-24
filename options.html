@@ -21,6 +21,18 @@
       <!-- <button type="button" id="autofetch">Auto-fetch</button> -->
     </div>
     <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+      <span style="margin-right: 1em;" title="Automatically downloads the pdf in one click instead of just redirecting to sci-hub.">
+        Auto-download pdf's:
+      </span>
+      <input type="checkbox" id="autodownload"/>
+    </div>
+    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+      <span style="margin-right: 1em;" title="Automatically names downloaded pdf's with the naming convention LastnameYearJournal_shorttitle.pdf.  This setting only applies if Auto-download is turned on.">
+        Auto-name downloaded pdf's:
+      </span>
+      <input type="checkbox" id="autoname"/>
+    </div>
+    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
       <span style="margin-right: 1em;" title="Opens sci-hub in a new tab instead of the current tab">
         Open in new tab:
       </span>

@@ -59,6 +59,8 @@ function checkServerStatus(domain, i, ifOnline, ifOffline) {
   img.src = domain + "/misc/img/raven_1.png";
 }
 
+updateStuffBool(document.getElementById("autodownload"), "autodownload");
+updateStuffBool(document.getElementById("autoname"), "autoname");
 updateStuffBool(document.getElementById("newtab"), "open-in-new-tab");
 updateStuffBool(document.getElementById("autocheck"), "autocheck-server");
 updateStuffString(document.getElementById("url"), "scihub-url", true);
