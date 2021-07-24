@@ -21,7 +21,7 @@ function updatePageBool(field, propname) {
 function updateStorage(val, propname) {
   var obj = {};
   obj[propname] = val;
-  chrome.storage.local.set(obj, function () {});
+  chrome.storage.local.set(obj, function () { });
   var bgPage = chrome.extension.getBackgroundPage();
   bgPage.setthing(propname, val);
 }
@@ -43,6 +43,7 @@ function updateStuffBool(field, propname) {
   updatePageBool(field, propname);
   field.onchange = function () {
     updateStorage(field.checked, propname);
+    alert("onchange called for " + propname);
   }
 }
 function checkServerStatus(domain, i, ifOnline, ifOffline) {
@@ -58,12 +59,23 @@ function checkServerStatus(domain, i, ifOnline, ifOffline) {
   // img.src = domain + "/favicon.ico";
   img.src = domain + "/misc/img/raven_1.png";
 }
+function createDependency(fieldmain, propmain, fieldaux, isvalid /* callback */) {
+  updateStuffBool(fieldmain, propmain);
+  fieldaux.disabled = !isvalid(fieldmain.checked);
+
+  const tmp = fieldmain.onchange;
+  fieldmain.onchange = function () {
+    tmp();
+    fieldaux.disabled = !isvalid(fieldmain.checked);
+  }
+}
 
 updateStuffBool(document.getElementById("autodownload"), "autodownload");
 updateStuffBool(document.getElementById("autoname"), "autoname");
 updateStuffBool(document.getElementById("newtab"), "open-in-new-tab");
 updateStuffBool(document.getElementById("autocheck"), "autocheck-server");
 updateStuffString(document.getElementById("url"), "scihub-url", true);
+createDependency(document.getElementById("autodownload"), "autodownload", document.getElementById("autoname"), (field) => { return field; });
 
 // fetch urls
 var links;
@@ -71,27 +83,27 @@ var linkstable = document.getElementById("links");
 function setUrl(i) {
   document.getElementById("url").value = links[i];
   updateStorage(links[i], "scihub-url");
-  document.getElementById("url").style.backgroundColor = linkstable.rows[parseInt(i)+1].bgColor;
+  document.getElementById("url").style.backgroundColor = linkstable.rows[parseInt(i) + 1].bgColor;
 }
 function fillUrls() {
   var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
+  xmlhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       links = JSON.parse(this.responseText);
       for (const i in links) {
         linkstable.insertRow();
-        linkstable.rows[linkstable.rows.length-1].innerHTML = "<td>"+links[i]+'</td><button id="link'+i+'">Select</button>';
+        linkstable.rows[linkstable.rows.length - 1].innerHTML = "<td>" + links[i] + '</td><button id="link' + i + '">Select</button>';
         document.getElementById("link" + i).onclick = function () { setUrl(i); }
       }
       console.log(linkstable.rows[links.length])
       console.log(links);
       for (const i in links) {
-        linkstable.rows[parseInt(i)+1].bgColor = "#aaa";
+        linkstable.rows[parseInt(i) + 1].bgColor = "#aaa";
         checkServerStatus(links[i], i,
           function () {
-            linkstable.rows[parseInt(i)+1].bgColor = "lightgreen";
+            linkstable.rows[parseInt(i) + 1].bgColor = "lightgreen";
           }, function () {
-            linkstable.rows[parseInt(i)+1].bgColor = "pink";
+            linkstable.rows[parseInt(i) + 1].bgColor = "pink";
           })
       }
     }
