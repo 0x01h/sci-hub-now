@@ -52,6 +52,13 @@ function checkServerStatus() {
   img.src = sciHubUrl + "/misc/img/raven_1.png";
 }
 
+function downloadPaper(link, fname) {
+  chrome.downloads.download({
+    url: link,
+    // filename: fname
+  });
+}
+
 function getHtml(htmlSource) {
   htmlSource = htmlSource[0];
   foundRegex = htmlSource.match(doiRegex);
@@ -107,3 +114,21 @@ browser.tabs.onUpdated.addListener(resetBadgeText);
 for (const property in defaults) {
   initialize(property);
 }
+
+// Messages from content scripts
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log("Got a message");
+    console.log(sender.tab ?
+                "from a content script:" + sender.tab.url :
+                "from the extension");
+    downloadPaper(request.pdfUrl, "test.pdf");
+    sendResponse({});
+
+    // go back
+    let queryOptions = { active: true, currentWindow: true };
+    chrome.tabs.query(queryOptions, (tabs) => {
+      chrome.tabs.goBack(tabs[0].id);
+    });
+  }
+);

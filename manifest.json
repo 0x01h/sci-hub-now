@@ -30,7 +30,13 @@
       }
     ]
   },
-  "permissions": ["activeTab", "contextMenus", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://sci-hub.se/*"],
+      "js": ["pdf-link-scraper.js"]
+    }
+  ],
+  "permissions": ["activeTab", "contextMenus", "downloads", "storage"],
   "background": {
     "scripts": ["browser-polyfill.js", "background.js"]
   },
