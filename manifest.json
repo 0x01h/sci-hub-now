@@ -30,6 +30,16 @@
       }
     ]
   },
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "windows": "Alt+A",
+        "mac": "Alt+A",
+        "chromeos": "Alt+A",
+        "linux": "Alt+A"
+      }
+    }
+  },
   "permissions": [
     "activeTab",
     "contextMenus",
