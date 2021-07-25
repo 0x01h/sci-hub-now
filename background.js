@@ -5,6 +5,7 @@ const doiRegex = new RegExp(
 );
 const trueRed = "#BC243C";
 
+// Variable management constants
 var sciHubUrl;
 var autodownload = false;
 var autoname = false;
@@ -17,7 +18,7 @@ const defaults = {
   "open-in-new-tab": false,
   "autocheck-server": true
 };
-
+// Variable management functions
 function printVars() {
   console.log("sciHubUrl: " + sciHubUrl +
     "\nautodownload: " + autodownload +
@@ -25,12 +26,6 @@ function printVars() {
     "\nopenInNewTab: " + openInNewTab +
     "\nautoCheckServer: " + autoCheckServer);
 }
-
-function resetBadgeText() {
-  browser.browserAction.setBadgeText({ text: "" });
-}
-
-// Variable management
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'local') {
     for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
@@ -65,7 +60,7 @@ function initialize(name, value) {
   setvariable(name, value);
 }
 
-// Initialize Variables
+// Variable Initialization
 chrome.runtime.onInstalled.addListener(function (details) {
   // Set variables to default if they don't already exist
   chrome.storage.local.get(defaults, function (result) {
@@ -109,6 +104,7 @@ chrome.permissions.onRemoved.addListener(function (permissions) {
   }
 });
 
+// Check server alive status
 function checkServerStatus() {
   var img = document.body.appendChild(document.createElement("img"));
   img.height = 0;
@@ -121,6 +117,7 @@ function checkServerStatus() {
   img.src = sciHubUrl + "/misc/img/raven_1.png";
 }
 
+// Automatic file name lookup & pdf downloading
 function httpGet(theUrl) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.open("GET", theUrl, false); // false for synchronous request
@@ -167,6 +164,7 @@ function redirectToScihub(destUrl) {
   }
 }
 
+// Primary callback upon icon click
 function getHtml(htmlSource) {
   htmlSource = htmlSource[0];
   foundRegex = htmlSource.match(doiRegex);
@@ -235,19 +233,7 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 // Badge stuff
+function resetBadgeText() {
+  browser.browserAction.setBadgeText({ text: "" });
+}
 browser.tabs.onUpdated.addListener(resetBadgeText);
-
-// // Messages from options script
-// chrome.runtime.onMessage.addListener(
-//   function (request, sender, sendResponse) {
-//     if (request.update) {
-//       console.log("this is a message! " + request);
-//       for (const key in request) {
-//         console.log(key + " - " + request[key]);
-//         setvariable(key, request[key], sendResponse);
-//       }
-//     } else {
-//       alert("Error code 12: unknown message");
-//     }
-//   }
-// );

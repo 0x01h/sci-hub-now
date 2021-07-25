@@ -30,24 +30,6 @@
       }
     ]
   },
-  "content_scripts": [
-    // {
-    //   "matches": [
-    //     "https://sci-hub.se/*"
-    //   ],
-    //   "js": [
-    //     "content-scripts/pdf-link-scraper.js"
-    //   ]
-    // }
-    // {
-    //   "matches": [
-    //     "https://doi.crossref.org/servlet/query*"
-    //   ],
-    //   "js": [
-    //     "content-scripts/doi-metadata-scraper.js"
-    //   ]
-    // }
-  ],
   "permissions": [
     "activeTab",
     "contextMenus",
@@ -62,9 +44,8 @@
     "scripts": [
       "browser-polyfill.js",
       "background.js",
-      "content-scripts/doi-metadata-scraper.js",
-      "content-scripts/pdf-link-scraper.js",
-      "content-scripts/permissions-manager.js"
+      "helper_js/doi-metadata-scraper.js",
+      "helper_js/pdf-link-scraper.js"
     ]
   },
   "options_page": "options.html",
