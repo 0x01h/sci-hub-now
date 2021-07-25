@@ -135,12 +135,36 @@ function createFilenameFromMetadata(md) {
     return undefined;
   return md.authorlastname + md.yearmod100 + md.shortvenue + "_" + md.shorttitle + '.pdf';
 }
-function downloadPaper(link, fname) {
+function downloadPaper(link, fname, scihublink) {
   console.log("Downloading " + link + " as " + fname);
   chrome.downloads.download({
     url: link,
     filename: fname
+  }, (downloadId) => {
+    if (!downloadId) {
+      alert("Download failed - redirecting to sci-hub...");
+      redirectToScihub(scihublink);
+    } else {
+      setTimeout(() => {
+        chrome.downloads.search({ id: downloadId }, (results) => {
+          console.log(results, results[0].bytesReceived);
+          console.log(results, results[0].bytesReceived);
+          if (!results || !results[0].bytesReceived) {
+            alert("Download is very slow.\nSuspected failure downloading.\nRedirecting to sci-hub...");
+            redirectToScihub(scihublink);
+          }
+        });
+      }, 500);
+    }
   });
+}
+function redirectToScihub(destUrl) {
+  if (openInNewTab) {
+    var creatingTab = browser.tabs.create({ url: destUrl });
+    creatingTab.then();
+  } else {
+    browser.tabs.update(undefined, { url: destUrl });
+  }
 }
 
 function getHtml(htmlSource) {
@@ -148,6 +172,7 @@ function getHtml(htmlSource) {
   foundRegex = htmlSource.match(doiRegex);
   if (foundRegex) {
     var doi = foundRegex[0].split(";")[0];
+    var destUrl = sciHubUrl + doi;
     // console.log("Regex: " + foundRegex);
     if (autodownload) {
       var metadata = undefined;
@@ -158,17 +183,18 @@ function getHtml(htmlSource) {
         metadata = extractMetadata(contents);
         console.log(metadata);
       }
-      var pdfLink = getPdfDownloadLink(httpGet(sciHubUrl + doi));
-      console.log(pdfLink);
-      downloadPaper(pdfLink, createFilenameFromMetadata(metadata));
-    } else {
-      var destUrl = sciHubUrl + doi;
-      if (openInNewTab) {
-        var creatingTab = browser.tabs.create({ url: destUrl });
-        creatingTab.then();
-      } else {
-        browser.tabs.update(undefined, { url: destUrl });
+      var pdfLink = '';
+      try {
+        pdfLink = getPdfDownloadLink(httpGet(destUrl));
+      } catch (e) {
+        alert("Download failed - redirecting to sci-hub...");
+        redirectToScihub(destUrl);
+        return;
       }
+      console.log(pdfLink);
+      downloadPaper(pdfLink, createFilenameFromMetadata(metadata), destUrl);
+    } else {
+      redirectToScihub(destUrl);
     }
     if (autoCheckServer) {
       checkServerStatus();
