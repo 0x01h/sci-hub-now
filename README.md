@@ -9,7 +9,7 @@ Free access to academic papers with just a single click!<br>
 **Microsoft Edge Add-on**: https://microsoftedge.microsoft.com/addons/detail/scihub-x-now/pgpggidmgechbjbefcnmodgkldndojca<br>
 
 [![Mozilla Add-on](https://img.shields.io/amo/v/sci-hub-x-now)](https://addons.mozilla.org/en-US/firefox/addon/sci-hub-x-now/)
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/gmmnidkpkgiohfdoenhpghbilmeeagjj)](https://chrome.google.com/webstore/detail/sci-hub-x-now/gmmnidkpkgiohfdoenhpghbilmeeagjj)  
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/gmmnidkpkgiohfdoenhpghbilmeeagjj)](https://chrome.google.com/webstore/detail/sci-hub-x-now/gmmnidkpkgiohfdoenhpghbilmeeagjj)
 [![Microsoft Edge Add-on](https://img.shields.io/badge/dynamic/json?label=microsoft%20edge%20add-on&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fpgpggidmgechbjbefcnmodgkldndojca)](https://microsoftedge.microsoft.com/addons/detail/scihub-x-now/pgpggidmgechbjbefcnmodgkldndojca)
 
 ---
