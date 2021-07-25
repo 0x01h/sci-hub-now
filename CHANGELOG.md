@@ -19,6 +19,7 @@
 - [#18](https://github.com/gchenfc/sci-hub-now/pull/18) Context menu support (right click on a DOI link)
 
 ### Modified
+- [#29](https://github.com/gchenfc/sci-hub-now/pull/29) Updated server checking and pdf link parsing to deal with [https://sci-hubtw.hkvisa.net/](https://sci-hubtw.hkvisa.net/)-style mirrors.
 - [#24](https://github.com/gchenfc/sci-hub-now/pull/24) Icon changed for readibility in dark mode
 
 ## v0.1.0

@@ -105,16 +105,29 @@ chrome.permissions.onRemoved.addListener(function (permissions) {
 });
 
 // Check server alive status
-function checkServerStatus() {
+function checkServerStatus(url) {
   var img = document.body.appendChild(document.createElement("img"));
   img.height = 0;
   img.visibility = "hidden";
   img.onerror = function () {
-    if (confirm("Looks like the mirror " + sciHubUrl + " is dead.  Would you like to go to the options page to select a different mirror?")) {
-      browser.tabs.create({ url: 'chrome://extensions/?options=' + chrome.runtime.id }).then();
-    }
-  }
-  img.src = sciHubUrl + "/misc/img/raven_1.png";
+    var img2 = document.body.appendChild(document.createElement("img"));
+    img2.height = 0;
+    img2.visibility = "hidden";
+    img2.onload = function () { // didn't load raven but did load favicon
+      if (confirm("We detected that the mirror " + url + " might be dead." +
+        "\nIf the page/pdf actually loaded correctly, then there's no need for action and you may consider going to the options page to disable \"Auto-check sci-hub mirror on each paper request\"." +
+        "\nWould you like to go to the options page to select a different mirror or to turn off auto-checking?")) {
+        browser.tabs.create({ url: 'chrome://extensions/?options=' + chrome.runtime.id }).then();
+      }
+    };
+    img2.onerror = function () { // didn't load either
+      if (confirm("Looks like the mirror " + url + " is dead.  Would you like to go to the options page to select a different mirror?")) {
+        browser.tabs.create({ url: 'chrome://extensions/?options=' + chrome.runtime.id }).then();
+      }
+    };
+    img2.src = url + "/favicon.ico";
+  };
+  img.src = url + "/misc/img/raven_1.png";
 }
 
 // Automatic file name lookup & pdf downloading
@@ -195,7 +208,7 @@ function getHtml(htmlSource) {
       redirectToScihub(destUrl);
     }
     if (autoCheckServer) {
-      checkServerStatus();
+      checkServerStatus(sciHubUrl);
     }
   } else {
     // browser.browserAction.setBadgeTextColor({ color: "white" });

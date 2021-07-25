@@ -27,6 +27,7 @@ function initFields() {
 function initializeString(propname, isUrl, alternateCallback) {
   if (!alternateCallback) alternateCallback = () => { return Promise.resolve(null) };
   let field = getField(propname);
+  field.style.backgroundColor = "#aaa";
   field.value = propnameValueCache[propname];
   field.onchange = function () {
     field.onkeyup();
@@ -39,6 +40,8 @@ function initializeString(propname, isUrl, alternateCallback) {
       checkServerStatus(field.value, -1,
         function () {
           field.style.backgroundColor = "lightgreen";
+        }, function () {
+          field.style.backgroundColor = "yellow";
         }, function () {
           field.style.backgroundColor = "pink";
         });
@@ -150,19 +153,29 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 
 // Code related to color-coding and populating sci-hub links
-
-function checkServerStatus(domain, i, ifOnline, ifOffline) {
+function checkServerStatus(domain, i, ifOnline, ifProbablyOnline, ifOffline) {
+  checkServerStatusHelper(domain + "/favicon.ico", i,
+    function () {
+      checkServerStatusHelper(domain + "/misc/img/raven_1.png", i,
+        ifOnline,
+        ifProbablyOnline,
+        ifProbablyOnline);
+    },
+    ifOffline,
+    function () { });
+}
+function checkServerStatusHelper(testurl, i, ifOnline, ifOffline, ifWaiting) {
   var img = document.body.appendChild(document.createElement("img"));
   img.height = 0;
   img.visibility = "hidden";
+  ifWaiting && ifWaiting.constructor == Function && ifWaiting(i);
   img.onload = function () {
     ifOnline && ifOnline.constructor == Function && ifOnline(i);
   };
   img.onerror = function () {
     ifOffline && ifOffline.constructor == Function && ifOffline(i);
   }
-  // img.src = domain + "/favicon.ico";
-  img.src = domain + "/misc/img/raven_1.png";
+  img.src = testurl;
 }
 
 // fetch urls
@@ -193,6 +206,8 @@ function fillUrls() {
         checkServerStatus(links[i], i,
           function () {
             linkstable.rows[parseInt(i) + 1].bgColor = "lightgreen";
+          }, function () {
+            linkstable.rows[parseInt(i) + 1].bgColor = "yellow";
           }, function () {
             linkstable.rows[parseInt(i) + 1].bgColor = "pink";
           })
