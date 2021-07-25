@@ -31,7 +31,8 @@ function initializeString(propname, isUrl, alternateCallback) {
   field.onchange = function () {
     field.onkeyup();
     updateStorage(field.value, propname);
-    alternateCallback(field.value);
+    alternateCallback(field.value).catch(
+      (reason) => { chrome.extension.getBackgroundPage().alert(reason); });
   };
   field.onkeyup = function () {
     if (isUrl) {
@@ -50,7 +51,9 @@ function initializeBool(propname, alternateCallback) {
   field.checked = propnameValueCache[propname];
   field.onchange = function () {
     console.log(propname + " callback!");
-    alternateCallback(field.checked).then(() => { updateStorage(field.checked, propname); });
+    alternateCallback(field.checked).then(
+      () => { updateStorage(field.checked, propname); },
+      (reason) => { chrome.extension.getBackgroundPage().alert(reason); });
   };
 }
 
@@ -95,7 +98,7 @@ function autonameCallback(checked) {
 }
 function scihuburlCallback(url) {
   console.log("url callback");
-  return autodownloadCallback(propnameValueCache["scihub-url"]);
+  return autodownloadCallback(propnameValueCache["autodownload"]);
 }
 function noop() { }
 

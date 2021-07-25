@@ -17,16 +17,13 @@ function requestCorsPermissionMetadata() {
     origins: ['https://doi.crossref.org/servlet/query*']
   };
   return promisifyPermission(chrome.permissions.contains, request)
-    .then(
-      noop,
+    .catch(
       (reason) => {
         console.log("metadata contains failed");
         return promisifyPermission(chrome.permissions.request, request);
       })
-    .then(
-      noop,
+    .catch(
       (reason) => {
-        chrome.extension.getBackgroundPage().alert(metadataFailMsg());
         return Promise.reject(metadataFailMsg());
       }
     );
@@ -45,16 +42,13 @@ function requestCorsPermissionScihub(sciHubUrl) {
   };
 
   return promisifyPermission(chrome.permissions.contains, request)
-    .then(
-      noop,
+    .catch(
       (reason) => {
         console.log("metadata contains failed");
         return promisifyPermission(chrome.permissions.request, request);
       })
-    .then(
-      noop,
+    .catch(
       (reason) => {
-        chrome.extension.getBackgroundPage().alert(scihubFailMsg(sciHubUrl));
         return Promise.reject(scihubFailMsg(sciHubUrl));
       }
     );
