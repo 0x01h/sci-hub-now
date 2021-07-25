@@ -47,6 +47,7 @@ function initializeString(propname, isUrl, alternateCallback) {
         });
     }
   };
+  field.onkeyup(); // colorize the initial text box
 }
 function initializeBool(propname, alternateCallback) {
   if (!alternateCallback) alternateCallback = () => { return Promise.resolve(null) };
