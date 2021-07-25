@@ -1,8 +1,39 @@
 'use strict';
 
-function updatePageString(field, propname, isUrl) {
-  chrome.storage.local.get([propname], function (result) {
-    field.value = result[propname];
+// Field access
+const propnameFieldnameMap = {
+  "autodownload": "autodownload",
+  "autoname": "autoname",
+  "open-in-new-tab": "newtab",
+  "autocheck-server": "autocheck",
+  "scihub-url": "url"
+};
+function getField(propname) {
+  return document.getElementById(propnameFieldnameMap[propname]);
+}
+var propnameValueCache = {};
+
+// Initialization
+function initFields() {
+  initializeBool("autodownload", autodownloadCallback);
+  initializeBool("autoname", autonameCallback);
+  initializeBool("open-in-new-tab");
+  initializeBool("autocheck-server");
+  initializeString("scihub-url", true, scihuburlCallback);
+  // autodownloadCallback(propnameValueCache["autodownload"]);
+  autodownloadCallback(propnameValueCache["autodownload"]);
+  autonameCallback(propnameValueCache["autoname"]);
+};
+function initializeString(propname, isUrl, alternateCallback) {
+  if (!alternateCallback) alternateCallback = () => { return Promise.resolve(null) };
+  let field = getField(propname);
+  field.value = propnameValueCache[propname];
+  field.onchange = function () {
+    field.onkeyup();
+    updateStorage(field.value, propname);
+    alternateCallback(field.value);
+  };
+  field.onkeyup = function () {
     if (isUrl) {
       checkServerStatus(field.value, -1,
         function () {
@@ -11,41 +42,110 @@ function updatePageString(field, propname, isUrl) {
           field.style.backgroundColor = "pink";
         });
     }
-  })
+  };
 }
-function updatePageBool(field, propname) {
-  chrome.storage.local.get([propname], function (result) {
-    field.checked = result[propname];
-  })
+function initializeBool(propname, alternateCallback) {
+  if (!alternateCallback) alternateCallback = () => { return Promise.resolve(null) };
+  let field = getField(propname);
+  field.checked = propnameValueCache[propname];
+  field.onchange = function () {
+    console.log(propname + " callback!");
+    alternateCallback(field.checked).then(() => { updateStorage(field.checked, propname); });
+  };
 }
+
+// Callbacks
+function autodownloadCallback(checked) {
+  console.log("autodownload callback: " + checked);
+  getField("autoname").disabled = !checked;
+  if (checked) {
+    return new Promise((resolve, reject) => {
+      requestCorsPermissionScihub(propnameValueCache["scihub-url"]).then(
+        (reason) => { console.log("completed scihub callback"); resolve(reason) },
+        (reason) => {
+          console.log("Scihub permission request failed");
+          updateStorage(false, "autodownload");
+          getField("autodownload").checked = false;
+          getField("autoname").disabled = true;
+          reject(reason);
+        }
+      );
+    });
+  } else {
+    return Promise.resolve("no additional permissions required");
+  }
+};
+function autonameCallback(checked) {
+  console.log("autoname callback: " + checked);
+  if (checked) {
+    return new Promise((resolve, reject) => {
+      requestCorsPermissionMetadata().then(
+        (reason) => { console.log("completed metadata callback"); resolve(reason) },
+        (reason) => {
+          console.log("Metadata permission request failed");
+          updateStorage(false, "autoname");
+          getField("autoname").checked = false;
+          reject(reason);
+        }
+      );
+    });
+  } else {
+    return Promise.resolve("no additional permissions required");
+  }
+}
+function scihuburlCallback(url) {
+  console.log("url callback");
+  return autodownloadCallback(propnameValueCache["scihub-url"]);
+}
+function noop() { }
+
+// Variable storage
 function updateStorage(val, propname) {
+  propnameValueCache[propname] = val;
   var obj = {};
   obj[propname] = val;
   chrome.storage.local.set(obj, function () { });
-  var bgPage = chrome.extension.getBackgroundPage();
-  bgPage.setthing(propname, val);
-}
-function updateStuffString(field, propname, isUrl) {
-  updatePageString(field, propname, isUrl);
-  field.onkeyup = function () {
-    updateStorage(field.value, propname);
-    if (isUrl) {
-      checkServerStatus(field.value, -1,
-        function () {
-          field.style.backgroundColor = "lightgreen";
-        }, function () {
-          field.style.backgroundColor = "pink";
-        });
+  console.log("updated storage for " + propname + ": " + val);
+};
+
+// Run start code here
+chrome.storage.local.get(Object.keys(propnameFieldnameMap), function (result) {
+  for (const [key, value] of Object.entries(result)) {
+    propnameValueCache[key] = value;
+  }
+  console.log("result is: ", result);
+  console.log("cache is: ", propnameValueCache);
+  initFields();
+});
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local') {
+    for (const key in changes) {
+      const value = changes[key].newValue;
+      if (value == propnameValueCache[key]) { // prevent infinite recursion
+        continue;
+      }
+      propnameValueCache[key] = value;
+      if (key == "scihub-url") {
+        getField("scihub-url").value = value;
+      } else {
+        getField(key).checked = value;
+      }
+      getField(key).onchange();
     }
   }
-}
-function updateStuffBool(field, propname) {
-  updatePageBool(field, propname);
-  field.onchange = function () {
-    updateStorage(field.checked, propname);
-    alert("onchange called for " + propname);
-  }
-}
+});
+
+
+
+
+
+
+
+
+
+
+// Code related to color-coding and populating sci-hub links
+
 function checkServerStatus(domain, i, ifOnline, ifOffline) {
   var img = document.body.appendChild(document.createElement("img"));
   img.height = 0;
@@ -59,31 +159,17 @@ function checkServerStatus(domain, i, ifOnline, ifOffline) {
   // img.src = domain + "/favicon.ico";
   img.src = domain + "/misc/img/raven_1.png";
 }
-function createDependency(fieldmain, propmain, fieldaux, isvalid /* callback */) {
-  updateStuffBool(fieldmain, propmain);
-  fieldaux.disabled = !isvalid(fieldmain.checked);
-
-  const tmp = fieldmain.onchange;
-  fieldmain.onchange = function () {
-    tmp();
-    fieldaux.disabled = !isvalid(fieldmain.checked);
-  }
-}
-
-updateStuffBool(document.getElementById("autodownload"), "autodownload");
-updateStuffBool(document.getElementById("autoname"), "autoname");
-updateStuffBool(document.getElementById("newtab"), "open-in-new-tab");
-updateStuffBool(document.getElementById("autocheck"), "autocheck-server");
-updateStuffString(document.getElementById("url"), "scihub-url", true);
-createDependency(document.getElementById("autodownload"), "autodownload", document.getElementById("autoname"), (field) => { return field; });
 
 // fetch urls
 var links;
 var linkstable = document.getElementById("links");
 function setUrl(i) {
-  document.getElementById("url").value = links[i];
-  updateStorage(links[i], "scihub-url");
-  document.getElementById("url").style.backgroundColor = linkstable.rows[parseInt(i) + 1].bgColor;
+  const field = getField("scihub-url");
+  field.value = links[i];
+  propnameValueCache["scihub-url"] = links[i];
+  field.onchange();
+  // updateStorage(links[i], "scihub-url");
+  // field.style.backgroundColor = linkstable.rows[parseInt(i) + 1].bgColor;
 }
 function fillUrls() {
   var xmlhttp = new XMLHttpRequest();
@@ -111,19 +197,5 @@ function fillUrls() {
   xmlhttp.open("GET", "https://raw.githubusercontent.com/gchenfc/sci-hub-now/master/activelinks.json", true);
   xmlhttp.send();
 }
-fillUrls();
-// document.getElementById("autofetch").onclick = function () {
-//   function ifOnline(i) {
-//     console.log(links[i]+" is valid :)");
-//     console.log("working domain is "+links[i]);
 
-//     linkstable.rows[i+1].bgColor = "lightgreen";
-//     setUrl(i);
-//   };
-//   function ifOffline (i) {
-//     console.log(links[i]+" is INVALID");
-//     linkstable.rows[i+1].bgColor = "pink";
-//     checkServerStatus(links[i+1], i+1, ifOnline, ifOffline);
-//   };
-//   ifOffline(-1);
-// };
+fillUrls();

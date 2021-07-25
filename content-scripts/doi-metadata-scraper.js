@@ -43,7 +43,7 @@ function extractMetadata(metadata_str) {
   metadata.shortvenue = abbreviateVenue(metadata.venue);
   metadata.yearmod100 = metadata.year.slice(-2);
 
-  chrome.runtime.sendMessage({ metadata: metadata });
+  return metadata;
 };
 
-extractMetadata(document.body.innerText);
+// extractMetadata(document.body.innerText);

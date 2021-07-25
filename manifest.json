@@ -31,33 +31,40 @@
     ]
   },
   "content_scripts": [
-    {
-      "matches": [
-        "https://sci-hub.se/*"
-      ],
-      "js": [
-        "content-scripts/pdf-link-scraper.js"
-      ]
-    },
-    {
-      "matches": [
-        "https://doi.crossref.org/servlet/query*"
-      ],
-      "js": [
-        "content-scripts/doi-metadata-scraper.js"
-      ]
-    }
+    // {
+    //   "matches": [
+    //     "https://sci-hub.se/*"
+    //   ],
+    //   "js": [
+    //     "content-scripts/pdf-link-scraper.js"
+    //   ]
+    // }
+    // {
+    //   "matches": [
+    //     "https://doi.crossref.org/servlet/query*"
+    //   ],
+    //   "js": [
+    //     "content-scripts/doi-metadata-scraper.js"
+    //   ]
+    // }
   ],
   "permissions": [
     "activeTab",
     "contextMenus",
-    "downloads",
     "storage"
+  ],
+  "optional_permissions": [
+    "downloads",
+    "https://doi.crossref.org/servlet/query*",
+    "*://*/*"
   ],
   "background": {
     "scripts": [
       "browser-polyfill.js",
-      "background.js"
+      "background.js",
+      "content-scripts/doi-metadata-scraper.js",
+      "content-scripts/pdf-link-scraper.js",
+      "content-scripts/permissions-manager.js"
     ]
   },
   "options_page": "options.html",

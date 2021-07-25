@@ -3,29 +3,43 @@
 const doiRegex = new RegExp(
   /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\'<>])\S)+)\b/
 );
+const trueRed = "#BC243C";
 
 var sciHubUrl;
-const trueRed = "#BC243C";
-var autodownload = true;
+var autodownload = false;
 var autoname = false;
 var openInNewTab = false;
 var autoCheckServer = true;
 const defaults = {
+  "autodownload": false,
   "scihub-url": "https://sci-hub.se/",
-  "autodownload": true,
   "autoname": false,
   "open-in-new-tab": false,
   "autocheck-server": true
 };
 
-var mostRecentDoi = "";
-var mostRecentMetadata = undefined;
+function printVars() {
+  console.log("sciHubUrl: " + sciHubUrl +
+    "\nautodownload: " + autodownload +
+    "\nautoname: " + autoname +
+    "\nopenInNewTab: " + openInNewTab +
+    "\nautoCheckServer: " + autoCheckServer);
+}
 
 function resetBadgeText() {
   browser.browserAction.setBadgeText({ text: "" });
 }
 
-function setthing(name, value) {
+// Variable management
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local') {
+    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+      setvariable(key, newValue);
+      console.log(`Changed "${key}" from "${oldValue}" to "${newValue}".`);
+    }
+  }
+});
+function setvariable(name, value) {
   switch (name) {
     case "scihub-url":
       sciHubUrl = value;
@@ -35,7 +49,6 @@ function setthing(name, value) {
       break;
     case "autoname":
       autoname = value;
-      mostRecentMetadata = undefined;
       break;
     case "open-in-new-tab":
       openInNewTab = value;
@@ -44,16 +57,58 @@ function setthing(name, value) {
       autoCheckServer = value;
       break;
   }
+  console.log("setvariable called!!!");
+  printVars();
 }
-function initialize(name) {
-  chrome.storage.local.get([name], function (result) {
-    if (!(name in result)) {
-      result[name] = defaults[name];
-      chrome.storage.local.set(result, function () { });
+function initialize(name, value) {
+  console.log("initializing " + name + ": " + value);
+  setvariable(name, value);
+}
+
+// Initialize Variables
+chrome.runtime.onInstalled.addListener(function (details) {
+  // Set variables to default if they don't already exist
+  chrome.storage.local.get(defaults, function (result) {
+    console.log("Initializing variables onInstalled: ", result);
+    chrome.storage.local.set(result); // for if variables were not set
+  });
+});
+chrome.storage.local.get(defaults, function (result) {
+  for (const property in result) {
+    initialize(property, result[property]);
+  }
+});
+// Special case: permission revoked:
+var tmpPermissions;
+chrome.permissions.onRemoved.addListener(function (permissions) {
+  console.log("permissions revoked!!!", permissions)
+  tmpPermissions = permissions;
+  for (var origin of permissions.origins) {
+    origin = origin.replaceAll("*", ".*"); // to match regex syntax
+    console.log(origin, getApiQueryUrl("", ""));
+    if (getApiQueryUrl("", "").match(origin)) {
+      alert("You've removed the permission for \"Sci-Hub X Now!\" to access the doi metadata query service by https://doi.crossref.org." +
+        "\nThe auto-naming feature will now be disabled but other functionality" + (autodownload ? " (including auto-downloading) " : " ") + "will continue to work." +
+        "\nYou may re-enable auto-naming at any time by going to the options page (right click the extension icon and click \"Options\") then selecting the \"Auto-name downloaded pdf's\" checkbox.");
+      chrome.storage.local.set({ "autoname": false });
     }
-    setthing(name, result[name]);
-  })
-}
+    if (sciHubUrl.match(origin)) {
+      alert("You've removed the permission for \"Sci-Hub X Now!\" to access the sci hub url: `" + sciHubUrl + "`." +
+        "\nThe auto-download feature will now be disabled but redirecting doi's to sci-hub will continue to work." +
+        "\nYou may re-enable auto-downloading at any time by going to the options page (right click the extension icon and click \"Options\") then selecting the \"Auto-download pdf's\" checkbox.");
+      chrome.storage.local.set({ "autodownload": false });
+    }
+  }
+  for (const permission of permissions.permissions) {
+    if (permission === "downloads") {
+      alert("You've removed the permission for \"Sci-Hub X Now!\" to automatically download files." +
+        "\nThe auto-download feature will now be disabled but redirecting doi's to sci-hub will continue to work." +
+        "\nYou may re-enable auto-downloading at any time by going to the options page (right click the extension icon and click \"Options\") then selecting the \"Auto-download pdf's\" checkbox.");
+      chrome.storage.local.set({ "autodownload": false });
+    }
+  }
+});
+
 function checkServerStatus() {
   var img = document.body.appendChild(document.createElement("img"));
   img.height = 0;
@@ -66,6 +121,12 @@ function checkServerStatus() {
   img.src = sciHubUrl + "/misc/img/raven_1.png";
 }
 
+function httpGet(theUrl) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", theUrl, false); // false for synchronous request
+  xmlHttp.send(null);
+  return xmlHttp.responseText;
+}
 function getApiQueryUrl(doi, email) {
   return 'https://doi.crossref.org/servlet/query' + '?pid=' + email + '&id=' + doi;
 }
@@ -76,57 +137,64 @@ function createFilenameFromMetadata(md) {
 }
 function downloadPaper(link, fname) {
   console.log("Downloading " + link + " as " + fname);
-  if (fname) {
-    chrome.downloads.download({
-      url: link,
-      filename: fname
-    });
-  } else {
-    chrome.downloads.download({
-      url: link
-    });
-  }
+  chrome.downloads.download({
+    url: link,
+    filename: fname
+  });
 }
 
 function getHtml(htmlSource) {
   htmlSource = htmlSource[0];
   foundRegex = htmlSource.match(doiRegex);
   if (foundRegex) {
-    foundRegex = foundRegex[0].split(";")[0];
-    mostRecentDoi = foundRegex;
+    var doi = foundRegex[0].split(";")[0];
     // console.log("Regex: " + foundRegex);
-    const email = 'gchenfc.developer@gmail.com';
-    var destUrl = (autodownload && autoname) ? getApiQueryUrl(mostRecentDoi, email) : (sciHubUrl + mostRecentDoi);
-    alert(autodownload + " - " + autoname + " - " + destUrl);
-    if (openInNewTab) {
-      var creatingTab = browser.tabs.create({ url: destUrl });
-      creatingTab.then();
+    if (autodownload) {
+      var metadata = undefined;
+      if (autoname) {
+        const email = 'gchenfc.developer@gmail.com';
+        var contents = httpGet(getApiQueryUrl(doi, email));
+        console.log(contents);
+        metadata = extractMetadata(contents);
+        console.log(metadata);
+      }
+      var pdfLink = getPdfDownloadLink(httpGet(sciHubUrl + doi));
+      console.log(pdfLink);
+      downloadPaper(pdfLink, createFilenameFromMetadata(metadata));
     } else {
-      browser.tabs.update(undefined, { url: destUrl });
+      var destUrl = sciHubUrl + doi;
+      if (openInNewTab) {
+        var creatingTab = browser.tabs.create({ url: destUrl });
+        creatingTab.then();
+      } else {
+        browser.tabs.update(undefined, { url: destUrl });
+      }
     }
     if (autoCheckServer) {
       checkServerStatus();
     }
   } else {
-    browser.browserAction.setBadgeTextColor({ color: "white" });
+    // browser.browserAction.setBadgeTextColor({ color: "white" });
     browser.browserAction.setBadgeBackgroundColor({ color: trueRed });
     browser.browserAction.setBadgeText({ text: ":'(" });
   }
 }
 
+// Icon click
 function executeJs() {
   const executing = browser.tabs.executeScript({
     code: "document.body.innerHTML",
   });
   executing.then(getHtml);
 }
+browser.browserAction.onClicked.addListener(executeJs);
 
+// Context menus (right click)
 browser.contextMenus.create({
   id: "doi-selection",
   title: "Find article by DOI!",
   contexts: ["selection", "link"],
 });
-
 browser.contextMenus.onClicked.addListener((info, tab) => {
   // if right-clicked on link, then parse link address first
   var doi = info.linkUrl;
@@ -140,37 +208,20 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
   });
 });
 
-browser.browserAction.onClicked.addListener(executeJs);
+// Badge stuff
 browser.tabs.onUpdated.addListener(resetBadgeText);
-for (const property in defaults) {
-  initialize(property);
-}
 
-// Messages from content scripts
-chrome.runtime.onMessage.addListener(
-  function (request, sender, sendResponse) {
-    if (request.pdfUrl) {
-      if (!autodownload)
-        return;
-      downloadPaper(request.pdfUrl, createFilenameFromMetadata(mostRecentMetadata));
-      // either close the tab or go back
-      let queryOptions = { active: true, currentWindow: true };
-      if (openInNewTab) {
-        chrome.tabs.query(queryOptions, (tabs) => {
-          chrome.tabs.remove(tabs[0].id);
-        });
-      } else {
-        chrome.tabs.query(queryOptions, (tabs) => {
-          chrome.tabs.goBack(tabs[0].id);
-        });
-      }
-    } else if (request.metadata) {
-      if (!autodownload || !autoname)
-        return;
-      mostRecentMetadata = request.metadata;
-      browser.tabs.update(undefined, { url: sciHubUrl + mostRecentDoi });
-    } else {
-      alert("Error code 12: unknown message");
-    }
-  }
-);
+// // Messages from options script
+// chrome.runtime.onMessage.addListener(
+//   function (request, sender, sendResponse) {
+//     if (request.update) {
+//       console.log("this is a message! " + request);
+//       for (const key in request) {
+//         console.log(key + " - " + request[key]);
+//         setvariable(key, request[key], sendResponse);
+//       }
+//     } else {
+//       alert("Error code 12: unknown message");
+//     }
+//   }
+// );
