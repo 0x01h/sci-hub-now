@@ -3,6 +3,7 @@
 ## TODO
 
 - [ ] Custom auto-naming formats
+- [ ] Custom email address to use with doi.crossref.org
 
 ## Unreleased
 
