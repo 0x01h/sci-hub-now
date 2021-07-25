@@ -255,3 +255,4 @@ function resetBadgeText() {
   browser.browserAction.setBadgeText({ text: "" });
 }
 browser.tabs.onUpdated.addListener(resetBadgeText);
+browser.tabs.onSelectionChanged.addListener(resetBadgeText);
