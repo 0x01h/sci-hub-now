@@ -134,10 +134,18 @@ chrome.storage.onChanged.addListener((changes, area) => {
         continue;
       }
       propnameValueCache[key] = value;
-      if (key == "scihub-url") {
-        getField("scihub-url").value = value;
-      } else {
-        getField(key).checked = value;
+      switch (key) {
+        case "scihub-url":
+          getField("scihub-url").value = value;
+          break;
+        case "autodownload":
+        case "autoname":
+        case "open-in-new-tab":
+        case "autocheck-server":
+          getField(key).checked = value;
+          break;
+        default:
+          continue;
       }
       getField(key).onchange();
     }
@@ -179,6 +187,9 @@ function checkServerStatusHelper(testurl, i, ifOnline, ifOffline, ifWaiting) {
   img.src = testurl;
 }
 
+// Fetch data from database
+const databaseRoot = "https://raw.githubusercontent.com/gchenfc/sci-hub-now/master/data/";
+// const databaseRoot = "data/"; // For local testing
 // fetch urls
 var links;
 var linkstable = document.getElementById("links");
@@ -215,8 +226,22 @@ function fillUrls() {
       }
     }
   };
-  xmlhttp.open("GET", "https://raw.githubusercontent.com/gchenfc/sci-hub-now/master/activelinks.json", true);
+  xmlhttp.open("GET", databaseRoot + "activelinks.json", true);
   xmlhttp.send();
 }
-
 fillUrls();
+
+// Fetch venue abbreviations
+function getVenueAbbreviations() {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const venueAbbreviations = JSON.parse(this.responseText);
+      console.log("venue abbreviations:", venueAbbreviations);
+      updateStorage(venueAbbreviations, "venue-abbreviations");
+    }
+  };
+  xmlhttp.open("GET", databaseRoot + "venue-abbreviations.json", true);
+  xmlhttp.send();
+}
+getVenueAbbreviations();
