@@ -11,12 +11,14 @@ var autodownload = false;
 var autoname = false;
 var openInNewTab = false;
 var autoCheckServer = true;
+var venueAbbreviations = {};
 const defaults = {
   "autodownload": false,
   "scihub-url": "https://sci-hub.se/",
   "autoname": false,
   "open-in-new-tab": false,
-  "autocheck-server": true
+  "autocheck-server": true,
+  "venue-abbreviations": {}
 };
 // Variable management functions
 function printVars() {
@@ -50,6 +52,9 @@ function setvariable(name, value) {
       break;
     case "autocheck-server":
       autoCheckServer = value;
+      break;
+    case "venue-abbreviations":
+      venueAbbreviations = value;
       break;
   }
   console.log("setvariable called!!!");

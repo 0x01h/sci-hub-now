@@ -1,11 +1,4 @@
 const metadataRegex = new RegExp(/.*?\|([^\|]+?)\|([^\|]+?)\|[^\|]*?\|[^\|]*?\|[^\|]*?\|([^\|]+?)\|[^\|]*?\|([^\|]*?)\|([^\|]*)/);
-const venueAbbreviations = {
-  "Transactions on Robotics": "TRO",
-  "International Conference on Robotics and Automation": "ICRA",
-  "International Conference on Intelligent Robots and Systems": "IROS",
-  "Proceedings of Robotics: Science and Systems": "RSS",
-  "International Journal of Robotics Research": "IJRR"
-};
 
 function extractLastName(fullname) {
   let lastname = fullname.match(/.*\s(.*)/);
@@ -19,11 +12,20 @@ function abbreviateVenue(venue) {
   // First loop through our hard-coded list
   for (const property in venueAbbreviations) {
     if (venue.includes(property)) {
+      console.log("venue " + venue + " - found " + property + ": " + venueAbbreviations[property] + " in lookup table")
       return venueAbbreviations[property].toLowerCase();
     }
   }
+  // If it has parentheses, then that's probably the abbreviation (e.g. IEEE often does this)
+  let inParen = venue.match(/\((.*)\)/);
+  if (inParen && (inParen[1].length < 8)) {
+    console.log("venue " + venue + " - found parentheses: ", inParen);
+    return inParen[1].toLowerCase();
+  }
   // If it doesn't match any entries, then just take the first letter of each capitalized word.
-  let capitalLetters = venue.match(/[A-Z]/g);
+  console.log("venue " + venue + "resorting to first letter of each capital word");
+  let capitalLetters = venue.match(/[A-Z][a-z]/g); // first 2 letters (lowercase makes sure it's a word)
+  capitalLetters.forEach((v, i) => { capitalLetters[i] = v[0] }); // drop second letter of each chunk
   return capitalLetters.join('').toLowerCase();
 };
 function extractMetadata(metadata_str) {
