@@ -61,6 +61,7 @@ function initializeBool(propname, alternateCallback) {
 function autodownloadCallback(checked) {
   console.log("autodownload callback: " + checked);
   getField("autoname").disabled = !checked;
+  getField("open-in-new-tab").disabled = checked;
   if (checked) {
     return new Promise((resolve, reject) => {
       requestCorsPermissionScihub(propnameValueCache["scihub-url"]).then(
@@ -70,6 +71,7 @@ function autodownloadCallback(checked) {
           updateStorage(false, "autodownload");
           getField("autodownload").checked = false;
           getField("autoname").disabled = true;
+          getField("open-in-new-tab").disabled = checked;
           reject(reason);
         }
       );
