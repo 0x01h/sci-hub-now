@@ -1,5 +1,14 @@
 # Changelog
 
+## TODO
+
+- [ ] Custom auto-naming formats
+
+## Unreleased
+
+### Added
+- #25 Auto-download pdf & auto-naming
+
 ## v0.1.0
 
 ### Added
