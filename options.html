@@ -6,33 +6,76 @@
         border: 1px solid black;
         border-collapse: collapse;
       }
-      td, th {border:  1px solid;
+      td, th {
+        border:  1px solid;
         padding: 0px 10px;
+      }
+      .option {
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        align-items: center;
+        margin: 0.5em 0;
+      }
+      .separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 1em 0;
+      }
+      .separator::before,
+      .separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #000;
+      }
+      .separator:not(:empty)::before {
+        margin-right: .25em;
+      }
+      .separator:not(:empty)::after {
+        margin-left: .25em;
       }
     </style>
   </head>
   <body>
     <h1>Sci-hub X Now!</h1>
-    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+    <div class="separator">Settings (hover for descriptions)</div>
+    <div class="option">
       <span style="margin-right: 1em;" title="The top level domain for sci-hub.  Since sci-hub mirrors are frequently taken down, you can change this to a working link.  Note: you must include the https:// and trailing /">
         Sci-Hub url:
       </span>
       <input type="text" id="url"/>
       <!-- <button type="button" id="autofetch">Auto-fetch</button> -->
     </div>
-    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
-      <span style="margin-right: 1em;" title="Opens sci-hub in a new tab instead of the current tab">
-        Open in new tab:
+    <div class="option">
+      <input type="checkbox" id="autodownload"/>
+      <span style="margin-left: 0.5em;" title="Automatically downloads the pdf in one click instead of just redirecting to sci-hub.">
+        Auto-download pdf's <sup>1</sup>
       </span>
+    </div>
+    <div class="option">
+      <input type="checkbox" id="autoname"/>
+      <span style="margin-left: 0.5em;" title="Automatically names downloaded pdf's with the naming convention LastnameYearJournal_shorttitle.pdf.  This setting only applies if Auto-download is turned on.">
+        Auto-name downloaded pdf's <sup>2</sup>
+      </span>
+    </div>
+    <div class="option">
       <input type="checkbox" id="newtab"/>
-    </div>
-    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
-      <span style="margin-right: 1em;" title="Automatically check if the sci-hub mirror is down each time you click the extension">
-        Auto-check sci-hub mirror on each paper request:
+      <span style="margin-left: 0.5em;" title="Opens sci-hub in a new tab instead of the current tab.  This setting only applies if Auto-download is turned off.">
+        Open in new tab
       </span>
-      <input type="checkbox" id="autocheck" checked="true"/>
     </div>
-    <hr />
+    <div class="option">
+      <input type="checkbox" id="autocheck" checked="true"/>
+      <span style="margin-left: 0.5em;" title="Automatically check if the sci-hub mirror is down each time you click the extension">
+        Auto-check sci-hub mirror on each paper request
+      </span>
+    </div>
+    <div style="font-size: 6pt; margin-bottom: 1em;">
+      <sup>1</sup> requires permissions to manage downloads and access <code>&lt;scihub-url&gt;</code> (to get the pdf link) <br />
+      <sup>2</sup> requires permissions to access <code>doi.crossref.org</code> for metadata lookup
+    </div>
+    <div class="separator">Mirrors</div>
     <div>
       Here is a list of back-up mirrors.
       Click "select" to paste the mirror into the "Sci-hub URL" field above.
@@ -58,5 +101,6 @@
       </p>
     </div>
   </body>
+  <script src="helper_js/permissions-manager.js"></script>
   <script src="options.js"></script>
 </html>

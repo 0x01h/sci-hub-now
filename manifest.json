@@ -30,9 +30,23 @@
       }
     ]
   },
-  "permissions": ["activeTab", "contextMenus", "storage"],
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "storage"
+  ],
+  "optional_permissions": [
+    "downloads",
+    "https://doi.crossref.org/servlet/query*",
+    "*://*/*"
+  ],
   "background": {
-    "scripts": ["browser-polyfill.js", "background.js"]
+    "scripts": [
+      "browser-polyfill.js",
+      "background.js",
+      "helper_js/doi-metadata-scraper.js",
+      "helper_js/pdf-link-scraper.js"
+    ]
   },
   "options_page": "options.html",
   "options_ui": {
