@@ -72,6 +72,18 @@ chrome.runtime.onInstalled.addListener(function (details) {
     console.log("Initializing variables onInstalled: ", result);
     chrome.storage.local.set(result); // for if variables were not set
   });
+
+  if (details.reason == "install") {
+    browser.tabs.create({ url: 'chrome://extensions/?options=' + chrome.runtime.id }).then();
+  }
+  if (details.reason == "update") { 
+    if (confirm("Thank you for upgrading Sci-Hub X Now!\n" +
+      "We have new features!\n" +
+      "Would you like to go to the \"options\" page now to enable them?"
+    )) {
+      browser.tabs.create({ url: 'chrome://extensions/?options=' + chrome.runtime.id }).then();
+    };
+  }
 });
 chrome.storage.local.get(defaults, function (result) {
   for (const property in result) {
