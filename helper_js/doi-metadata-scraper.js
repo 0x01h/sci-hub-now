@@ -31,7 +31,7 @@ function abbreviateVenue(venue) {
 function extractMetadata(metadata_str) {
   let matches = metadata_str.match(metadataRegex);
   if (!matches) {
-    alert("Could not parse the metadata file!\n" + metadata_str);
+    alert("Error 27: Could not parse the metadata file!\n\n" + metadata_str + "\nSaving with default filename.");
     return null;
   }
   let metadata = {

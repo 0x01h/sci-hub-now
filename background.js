@@ -202,8 +202,12 @@ function getHtml(htmlSource) {
       var pdfLink = '';
       try {
         pdfLink = getPdfDownloadLink(httpGet(destUrl));
+        if (!pdfLink) {
+          alert("Error 23: Download link parser failed - redirecting to sci-hub...");
+          redirectToScihub(scihublink);
+        }
       } catch (e) {
-        alert("Download failed - redirecting to sci-hub...");
+        alert("Error 24: Failed to obtain download link - redirecting to sci-hub...");
         redirectToScihub(destUrl);
         return;
       }
