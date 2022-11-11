@@ -3,7 +3,7 @@
 const doiRegex = new RegExp(
   /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\'<>])\S)+)\b/
 );
-const sciHubUrl = "https://sci-hub.tw/";
+const sciHubUrl = "https://sci-hub.se/";
 const trueRed = "#BC243C";
 
 function resetBadgeText() {
