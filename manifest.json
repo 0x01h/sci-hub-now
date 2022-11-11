@@ -2,8 +2,8 @@
   "manifest_version": 2,
   "name": "Sci-Hub Now!",
   "short_name": "sci-hub-now",
-  "version": "0.0.2",
-  "author": "Orçun Özdemir",
+  "version": "0.0.3",
+  "author": "Orçun Özdemir and John Ciubuc",
   "homepage_url": "https://github.com/0x01h/sci-hub-now",
   "description": "Free access to academic papers with just a single click! Abolish publishers, long live the open access movement!",
   "icons": {
